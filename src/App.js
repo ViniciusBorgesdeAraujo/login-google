@@ -1,23 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { GoogleLogin } from "react-google-login";
 
 function App() {
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [profilePic, setProfilePic] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const responseGoogle = (response) => {
+    console.log(response);
+    const {
+      profileObj: { name, email, imageUrl },
+    } = response;
+    setName(name);
+    setEmail(email);
+    setProfilePic(imageUrl);
+    setIsLoggedIn(true);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <GoogleLogin
+        clientId="840747944762-unpghsku5bfr7kd67ofs3npmcfhuja40.apps.googleusercontent.com"
+        buttonText="Continuar com o Google"
+        onSuccess={responseGoogle}
+        onFailure={responseGoogle}
+      />
+      {isLoggedIn ? (
+        <div style={{ textAlign: "center" }}>
+          <h1>User Information</h1>
+          <img className="profile" src={profilePic} alt="Profile" />
+          <p>Name: {name}</p>
+          <p>Email: {email}</p>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }
